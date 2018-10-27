@@ -91,7 +91,7 @@ class PlayBellSound(StartableBackgroundThread):
 
     def __init__(self):
         super().__init__()
-        self._audio_path = os.path.abspath("assets/bowl.mp3")
+        self._audio_path = os.path.join(sys.path[0], "assets/bowl.mp3")
 
     def _get_background_task_function(self) -> Callable:
         return self._play_audio
