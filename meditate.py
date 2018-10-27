@@ -1,6 +1,8 @@
 import argparse
+import math
 import os
 import subprocess
+import sys
 import time
 from threading import Timer
 from typing import Callable
@@ -27,9 +29,9 @@ class MeditationTimer(StartableBackgroundThread):
         self._interval_timer = None
 
     def _get_background_task_function(self) -> Callable:
-        return self._countdown_timer
+        return self._timer
 
-    def _countdown_timer(self):
+    def _timer(self):
         # Untimed meditation => Infinite timer
         if self._total_time == 0:
             while True:
@@ -55,14 +57,18 @@ class MeditationTimer(StartableBackgroundThread):
             os.system('clear')
             print(timeformat)
             time.sleep(1)
+            self._time_spent_meditating += 1
             self._total_time -= 1
+        os.system('clear')
+        print(f"Finished meditating for {math.floor(self._time_spent_meditating / 60)} minutes.")
+        sys.exit()
 
 
 class IntervalTimer(StartableBackgroundThread):
     """Interval Timer. Rings a bell after a given interval."""
 
     def __init__(self, interval_time: int):
-        super().__init__()
+        super().__init__(True)
         self._original_interval = interval_time
         self._remaining_interval_time = interval_time
 

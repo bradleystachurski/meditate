@@ -29,14 +29,16 @@ class StartableBackgroundThread(ABC, Startable):
 
     Attributes:
         _thread: The handle for the Thread used for the background task
+        _daemon: Boolean representing if Thread is Daemon
     """
-    def __init__(self):
+    def __init__(self, daemon: bool=False):
         super().__init__()
         self._thread = None
+        self._daemon = daemon
 
     def start(self) -> bool:
         if super().start():
-            self._thread = Thread(target=self._get_background_task_function())
+            self._thread = Thread(target=self._get_background_task_function(), daemon=self._daemon)
             self._thread.start()
             return True
         return False
